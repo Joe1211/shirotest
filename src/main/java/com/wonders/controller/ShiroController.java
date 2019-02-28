@@ -36,6 +36,6 @@ public class ShiroController {
             }
 
         }
-        return "redirect:list.jsp";
+        return "redirect:../list.jsp";
     }
 }

@@ -67,11 +67,13 @@
             配置那些页面需要收保护,以及访问这些页面需要的权限
             1. anon 可以被匿名访问
             2. authc 必须认证(即登陆)后才可以访问
+            3.logout 登出
         -->
         <property name="filterChainDefinitions">
             <value>
                 /login.jsp = anon
                 /shiro/login = anon
+                /shiro/logout = logout
                 /** = authc
             </value>
         </property>
