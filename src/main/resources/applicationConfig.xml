@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd ">
+    <context:component-scan base-package="com.wonders">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--
+        1. 配置 SecurityManager
+    -->
+    <bean id ="securityManager" class ="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager"/>
+        <!--<property name="sessionManager" ref="native"/>-->
+        <property name ="realm" ref ="jdbcRealm"/>
+    </bean>
+
+    <!--
+        2.配置CacheManager
+        2.1 需要加入 ehcache 的 jar 包及配置文件
+    -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <!--
+        3.配置 Realm
+        3.1 直接实现了Realm接口的bean
+    -->
+    <bean id="jdbcRealm" class="com.wonders.realm.ShiroRealm">
+    </bean>
+
+    <!--
+        4.配置LifecycleBeanPostProcessor 可以自定的来调用配置在Spring IOC容器中 shiro bean 的生命周期方法
+    -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--
+        5.启用 IOC 容器中使用shiro 的注解,但必须在配置了lifecycleBeanPostProcessor之后才可以使用
+    -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+     </bean>
+
+    <!--
+        6.配置ShiroFilter
+        6.1 id 必须和 web.xml 文件中配置的DelegatingFilterProxy 的 <filter-name>一致
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <property name="successUrl" value="/list.jsp"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <!--
+            配置那些页面需要收保护,以及访问这些页面需要的权限
+            1. anon 可以被匿名访问
+            2. authc 必须认证(即登陆)后才可以访问
+        -->
+        <property name="filterChainDefinitions">
+            <value>
+                /login.jsp = anon
+                /shiro/login = anon
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+</beans>

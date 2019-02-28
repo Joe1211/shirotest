@@ -1,0 +1,11 @@
+1.获取当前的 Subject. 调用 SecurityUtils.getSubject()
+2.测试当前的用户是否已经被认证(登陆).调用 Subject 的 isAuthenticated()
+3.若没有被认证,则把用户名和密码封装为 UsernamePasswordToken 对象
+    1).创建一个表单页面
+    2).把请求提交到 SpringMVC 的 Handler
+    3).获取用户名和密码
+4.执行登陆: 调用 Subject 的 login(AuthenticationToken) 方法
+5.自定义 Realm 的方法, 从数据库中获取对应的记录,返回给 Shiro.
+    1).实际上需要继承org.apache.shiro.realm.AuthenticatingRealm 类
+    2).实现doGetAuthenticationInfo(AuthenticationToken) 方法
+6.由 shiro 完成密码的对比
