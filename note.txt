@@ -1,3 +1,4 @@
+认证:
 1.获取当前的 Subject. 调用 SecurityUtils.getSubject()
 2.测试当前的用户是否已经被认证(登陆).调用 Subject 的 isAuthenticated()
 3.若没有被认证,则把用户名和密码封装为 UsernamePasswordToken 对象
@@ -18,7 +19,8 @@
         2.4).使用new SimpleHash(hashAlgorithnName,credentials,salt,hashIterations)来计算盐值加密后的密码的值
 
 
+授权:
+admin用户可访问admin.jsp 和 user.jsp页面, user 用户只能访问 user.jsp页面,密码都为123456
 1.授权需要继承AutohorizingRealm 类,并实现其 doGetAuthenticationInfo 方法
 2.AuthorizingRealm 类继承自 AuthenticatingRealm 但没有实现AuthenticatingRealm 中的
   doGetAuthenticationInfo 所以认证和授权只需要继承AuthenticatingRealm 就可以了,同时实现它的两个抽象方法
-3.
