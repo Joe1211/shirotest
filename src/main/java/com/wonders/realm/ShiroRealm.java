@@ -1,8 +1,10 @@
 package com.wonders.realm;
 
 import org.apache.shiro.authc.*;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.util.ByteSource;
 
 /**
  * @ClassName ShiroRealm
@@ -37,12 +39,29 @@ public class ShiroRealm extends AuthenticatingRealm {
         //1.principal:认证的实体信息.可以是username,也可以是数据表对应的用户的实体类对象.
         Object principal = username;
         //2.credentials :密码
-        Object credentials = "123456";
+        Object credentials = null;// "4a95737b032e98a50c056c41f2fa9ec6";
+        if ("admin".equals(username)){
+            credentials = "038bdaf98f2037b31f1e75b5b4c9b26e";
+        }else if("user".equals(username)){
+            credentials = "098d2c478e9c11555ce2823231e02ec1";
+        }
         //3.realmName:当前realm对象的name,调用父类的getName()方法即可
         String realmName = getName();
-
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,credentials,realmName);
+        //4.盐值
+        ByteSource credentialsSalt = ByteSource.Util.bytes(username);
+        SimpleAuthenticationInfo info = null;
+        info = new SimpleAuthenticationInfo(principal,credentials,credentialsSalt,realmName);
 
         return info;
+    }
+
+    public static void main(String[] args) {
+        String hashAlgorithnName="MD5";
+        Object credentials = "123456";
+        Object salt = ByteSource.Util.bytes("user");
+        int hashIterations = 1024;
+
+        Object result = new SimpleHash(hashAlgorithnName,credentials,salt,hashIterations);
+        System.out.println(result);
     }
 }

@@ -9,3 +9,10 @@
     1).实际上需要继承org.apache.shiro.realm.AuthenticatingRealm 类
     2).实现doGetAuthenticationInfo(AuthenticationToken) 方法
 6.由 shiro 完成密码的对比
+    1).通过AuthenticatingRealm 的 credentialsMatcher 属性来进行的密码的比对
+    2).把一个字符串加密为MD5,盐值加密
+        2.1).在 doGetAuthenticationInfo 方法返回值创建SimpleAuthenticationInfo 对象的时候,需要使用
+             SimpleAuthenticationInfo(principal,credentials,credentialsSalt,realmName)构造器
+        2.2).使用 ByteSource.Util.bytes()来计算盐值.
+        2.3).盐值需要唯一:一般使用随机字符串或user id .
+        2.4).使用new SimpleHash(hashAlgorithnName,credentials,salt,hashIterations)来计算盐值加密后的密码的值

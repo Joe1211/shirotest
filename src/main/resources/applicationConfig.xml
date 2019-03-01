@@ -38,6 +38,12 @@
         3.1 直接实现了Realm接口的bean
     -->
     <bean id="jdbcRealm" class="com.wonders.realm.ShiroRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"></property>
+                <property name="hashIterations" value="1024"></property>
+            </bean>
+        </property>
     </bean>
 
     <!--
@@ -78,5 +84,4 @@
             </value>
         </property>
     </bean>
-
 </beans>
