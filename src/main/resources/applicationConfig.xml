@@ -22,7 +22,14 @@
     <bean id ="securityManager" class ="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="cacheManager" ref="cacheManager"/>
         <!--<property name="sessionManager" ref="native"/>-->
-        <property name ="realm" ref ="jdbcRealm"/>
+        <property name ="authenticator" ref ="authenticator"/>
+
+        <property name="realms">
+            <list>
+                <ref bean="jdbcRealm"/>
+                <ref bean="secondRealm"/>
+            </list>
+        </property>
     </bean>
 
     <!--
@@ -31,6 +38,17 @@
     -->
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+    <!--
+        认证策略 AuthenticationStrategy接口的默认实现
+        FirstSuccessfulStrategy:只有一个 Realm 验证成功即可,且返回第一个 Realm 身份验证成功的认证信息,其它的忽略
+        AtLeastOneSuccessfulStrategy:只有一个 Realm 验证成功即可,和FirstSuccessfulStrategy不同,将返回所有 Realm 身份认证成功的认证信息
+        AllSuccessfulStrategy:所有Realm 验证成功才算成功,且返回所有Realm 身份验证成功的认证信息,如果有一个失败则失败
+    -->
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+        </property>
     </bean>
 
     <!--
@@ -41,6 +59,14 @@
         <property name="credentialsMatcher">
             <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
                 <property name="hashAlgorithmName" value="MD5"></property>
+                <property name="hashIterations" value="1024"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="secondRealm" class="com.wonders.realm.SecondRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="SHA1"></property>
                 <property name="hashIterations" value="1024"></property>
             </bean>
         </property>
