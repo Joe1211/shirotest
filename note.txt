@@ -24,3 +24,9 @@ admin用户可访问admin.jsp 和 user.jsp页面, user 用户只能访问 user.j
 1.授权需要继承AutohorizingRealm 类,并实现其 doGetAuthenticationInfo 方法
 2.AuthorizingRealm 类继承自 AuthenticatingRealm 但没有实现AuthenticatingRealm 中的
   doGetAuthenticationInfo 所以认证和授权只需要继承AuthenticatingRealm 就可以了,同时实现它的两个抽象方法
+
+
+权限注解:
+    https://blog.csdn.net/acmman/article/details/78765315
+shiro标签使用方法:
+    https://blog.csdn.net/yaodieteng1510/article/details/79992247

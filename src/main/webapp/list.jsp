@@ -18,16 +18,18 @@ Welcome:<shiro:principal></shiro:principal>
 </shiro:hasAnyRoles>
 
 <shiro:hasAnyRoles name="admin">
-<a href="admin.jsp">admin page</a>
+<a href="admin.jsp">Admin Page</a>
 <br><br>
 </shiro:hasAnyRoles>
 
 
 <shiro:hasAnyRoles name="user">
-<a href="user.jsp">user page</a>
+<a href="user.jsp">User Page</a>
 <br><br>
 </shiro:hasAnyRoles>
 
+<a href="/shiro/testShiroAnnotation">Test ShiroAnnotation</a>
+<br><br>
 
 <a href="shiro/logout">Logout</a>
 </body>
