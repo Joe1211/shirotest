@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @ClassName ShiroHandler
  * @Author 乔翰林
@@ -23,7 +25,8 @@ public class ShiroController {
     private ShiroService shiroService;
 
     @RequestMapping("/testShiroAnnotation")
-    public String testShiroAnnotation(){
+    public String testShiroAnnotation(HttpSession session){
+        session.setAttribute("key","value123");
         shiroService.testMethod();
         return "redirect:/list.jsp";
     }
@@ -46,6 +49,9 @@ public class ShiroController {
                 System.out.println("登陆失败:"+ae.getMessage());
             }
 
+        }
+        if (username.equals("admin")){
+            return "redirect:../admin.jsp";
         }
         return "redirect:../list.jsp";
     }
